@@ -11,18 +11,24 @@ class _CheckboxPageState extends State<CheckboxPage> {
   final List<Map<String, dynamic>> _tasks = [];
   final TextEditingController _taskController = TextEditingController();
   DateTime? _selectedDeadline;
+  bool _isLoading = false;
 
-  void _addTask() {
+  void _addTask() async {
     if (_taskController.text.isNotEmpty && _selectedDeadline != null) {
+      setState(() => _isLoading = true);
+
+      await Future.delayed(const Duration(seconds: 1)); // simulasi loading
+
       setState(() {
         _tasks.add({
           'title': _taskController.text,
           'deadline': _selectedDeadline!,
           'done': false,
         });
+        _taskController.clear();
+        _selectedDeadline = null;
+        _isLoading = false;
       });
-      _taskController.clear();
-      _selectedDeadline = null;
     }
   }
 
@@ -34,12 +40,12 @@ class _CheckboxPageState extends State<CheckboxPage> {
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
-              title: Text("Tenggat Waktu Terlewati!"),
+              title: const Text("Tenggat Waktu Terlewati!"),
               content: Text("Tugas '${task['title']}' sudah melewati tenggat waktu."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 )
               ],
             ),
@@ -59,19 +65,19 @@ class _CheckboxPageState extends State<CheckboxPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("To-Do List")),
+      appBar: AppBar(title: const Text("To-Do List")),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: _taskController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Nama Tugas",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 ElevatedButton(
@@ -88,9 +94,9 @@ class _CheckboxPageState extends State<CheckboxPage> {
                       });
                     }
                   },
-                  child: Text("Pilih Tenggat"),
+                  child: const Text("Pilih Tenggat"),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   _selectedDeadline != null
                       ? "${_selectedDeadline!.toLocal()}".split(' ')[0]
@@ -98,12 +104,21 @@ class _CheckboxPageState extends State<CheckboxPage> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _addTask,
-              child: Text("Tambah Tugas"),
+              onPressed: _isLoading ? null : _addTask,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text("Tambah Tugas"),
             ),
-            Divider(height: 30),
+            const Divider(height: 30),
             Expanded(
               child: ListView.builder(
                 itemCount: _tasks.length,
@@ -119,7 +134,9 @@ class _CheckboxPageState extends State<CheckboxPage> {
                               : TextDecoration.none,
                         ),
                       ),
-                      subtitle: Text("Tenggat: ${task['deadline'].toLocal()}".split(' ')[0]),
+                      subtitle: Text(
+                        "Tenggat: ${task['deadline'].toLocal()}".split(' ')[0],
+                      ),
                       trailing: Wrap(
                         spacing: 12,
                         children: [
@@ -132,7 +149,7 @@ class _CheckboxPageState extends State<CheckboxPage> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
                                 _tasks.removeAt(index);

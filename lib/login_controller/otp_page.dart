@@ -11,6 +11,31 @@ class _OtpPageState extends State<OtpPage> {
   final TextEditingController otpController = TextEditingController();
   final String generatedOtp = "123456"; // Simulasi kode OTP
 
+  @override
+  void initState() {
+    super.initState();
+    // Tampilkan OTP saat halaman dibuka
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showOtpPopup();
+    });
+  }
+
+  void _showOtpPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Kode OTP Anda"),
+        content: Text("Gunakan kode ini untuk login: $generatedOtp"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _verifyOtp() {
     if (otpController.text == generatedOtp) {
       Navigator.pushReplacementNamed(context, '/main');
