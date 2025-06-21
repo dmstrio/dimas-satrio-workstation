@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart'; // Tambahkan package ini di pubspec.yaml
+import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,7 +20,8 @@ class _LoginPageState extends State<LoginPage> {
       String password = passwordController.text.trim();
 
       if (email == "dimasatrio@gmail.com" && password == "24122004") {
-        Navigator.pushReplacementNamed(context, '/main');
+        // Setelah login berhasil, arahkan ke halaman OTP
+        Navigator.pushReplacementNamed(context, '/otp');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Email atau password salah")),
@@ -42,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  'assets/animation/login.json', // Pastikan file ada di folder assets
+                  'assets/animation/login.json',
                   height: 150,
                 ),
                 const SizedBox(height: 20),

@@ -9,6 +9,7 @@ import 'pages/tab_view_page.dart';
 import 'pages/alert_toast_page.dart';
 import 'login_controller/login_page.dart';
 import 'login_controller/register_page.dart';
+import 'login_controller/otp_page.dart'; // Tambahkan ini
 
 void main() {
   runApp(const MyApp());
@@ -21,14 +22,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/main': (context) => const MainPage(),
         '/register': (context) => const RegisterPage(),
+        '/otp': (context) => const OtpPage(), // Tambahkan route OTP
       },
     );
   }
